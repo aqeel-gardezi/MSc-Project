@@ -1,0 +1,41 @@
+# ============================================================
+# Dissertation: A Data-Driven Framework for Product Selection
+# in E-Commerce (NLP + Machine Learning)
+# Student: Syed Aqeel (24060071) | MSc Data Analytics
+# London Metropolitan University
+# ============================================================
+
+# --- Core data handling ---
+pandas>=2.0.0
+numpy>=1.24.0
+
+# --- Data collection ---
+pytrends>=4.9.2            # Google Trends demand signals
+requests>=2.31.0          # eBay Browse API calls
+kaggle>=1.6.0             # Kaggle dataset downloads
+
+# --- NLP: baseline sentiment ---
+vaderSentiment>=3.3.2     # VADER lexicon-based baseline
+nltk>=3.8.1               # minimal preprocessing / tokenisation
+
+# --- NLP: transformer models (HuggingFace) ---
+transformers>=4.38.0      # BERT / RoBERTa via HuggingFace
+torch>=2.1.0              # deep learning backend
+datasets>=2.16.0          # HuggingFace datasets library
+
+# --- NLP: aspect-based sentiment ---
+pyabsa>=2.4.0             # aspect-based sentiment extraction
+
+# --- Machine learning ---
+scikit-learn>=1.3.0       # Logistic Regression, Random Forest, metrics
+xgboost>=2.0.0            # gradient boosting model
+tensorflow>=2.15.0        # LSTM neural network (Keras)
+
+# --- Visualisation ---
+matplotlib>=3.7.0
+seaborn>=0.13.0
+plotly>=5.18.0            # interactive dashboard
+
+# --- Notebook environment ---
+jupyter>=1.0.0
+ipykernel>=6.29.0
