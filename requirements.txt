@@ -1,6 +1,6 @@
 # ============================================================
 # Dissertation: A Data-Driven Framework for Product Selection
-# in E-Commerce (NLP + Machine Learning)
+# in E-Commerce (NLP + Machine Learning) — Amazon
 # Student: Syed Aqeel (24060071) | MSc Data Analytics
 # London Metropolitan University
 # ============================================================
@@ -8,22 +8,22 @@
 # --- Core data handling ---
 pandas>=2.0.0
 numpy>=1.24.0
+scipy>=1.11.0             # statistical testing (t-test, Mann-Whitney U)
 
 # --- Data collection ---
-pytrends>=4.9.2            # Google Trends demand signals
-requests>=2.31.0          # eBay Browse API calls
-kaggle>=1.6.0             # Kaggle dataset downloads
-
-# --- NLP: baseline sentiment ---
-vaderSentiment>=3.3.2     # VADER lexicon-based baseline
-nltk>=3.8.1               # minimal preprocessing / tokenisation
-
-# --- NLP: transformer models (HuggingFace) ---
-transformers>=4.38.0      # BERT / RoBERTa via HuggingFace
-torch>=2.1.0              # deep learning backend
+huggingface-hub>=0.20.0   # McAuley Amazon Reviews 2023 dataset
 datasets>=2.16.0          # HuggingFace datasets library
+pytrends>=4.9.2           # Google Trends demand signals
 
-# --- NLP: aspect-based sentiment ---
+# --- Sentiment analysis: lexicon baseline ---
+vaderSentiment>=3.3.2     # VADER lexicon-based baseline
+nltk>=3.8.1               # minimal preprocessing utilities
+
+# --- Sentiment analysis: transformer models (HuggingFace) ---
+transformers>=4.38.0      # BERT / RoBERTa
+torch>=2.1.0              # deep learning backend
+
+# --- Sentiment analysis: aspect-based ---
 pyabsa>=2.4.0             # aspect-based sentiment extraction
 
 # --- Machine learning ---
@@ -34,7 +34,7 @@ tensorflow>=2.15.0        # LSTM neural network (Keras)
 # --- Visualisation ---
 matplotlib>=3.7.0
 seaborn>=0.13.0
-plotly>=5.18.0            # interactive dashboard
+plotly>=5.18.0
 
 # --- Notebook environment ---
 jupyter>=1.0.0
