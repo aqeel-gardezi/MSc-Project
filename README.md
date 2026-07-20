@@ -17,12 +17,6 @@ It combines Natural Language Processing (NLP) of customer reviews with machine
 learning classification to score product niches across four dimensions: demand,
 competition, pricing stability, and sentiment gap.
 
-**Scope note.** The study analyses Amazon data exclusively. eBay was considered
-during scoping but excluded: it offers no review corpus comparable to the
-McAuley Amazon Reviews dataset, and concentrating on a single platform permits
-greater analytical depth within the project timeframe. Cross-platform extension
-is identified as future work.
-
 ## Research Questions
 
 - **RQ1** — To what extent can NLP-based review mining reliably identify unmet
