@@ -513,7 +513,8 @@ with col_table:
         .format({'Demand': '{:.4f}', 'Competition': '{:.4f}',
                  'Sent. Gap': '{:.4f}', 'Pricing': '{:.4f}',
                  'Composite': '{:.4f}'})
-        .background_gradient(subset=['Composite'], cmap='Blues')
+        .highlight_max(subset=['Composite'], color='#C5E1C5')
+        .highlight_min(subset=['Composite'], color='#F5C6C6')
         .set_properties(**{'text-align': 'center'}),
         use_container_width=True,
         height=200
