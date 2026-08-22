@@ -476,9 +476,10 @@ with col_radar:
             theta=categories + [categories[0]],
             fill='toself',
             name=row['niche'],
-            line_color=NICHE_COLOURS.get(row['niche'], NAVY),
+            line=dict(color=NICHE_COLOURS.get(row['niche'], NAVY),
+                      width=2.5),
             fillcolor=NICHE_COLOURS.get(row['niche'], NAVY),
-            opacity=0.15,
+            opacity=0.35,
         ))
 
     fig_radar.update_layout(
