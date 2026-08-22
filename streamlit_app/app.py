@@ -175,25 +175,26 @@ st.markdown("""
 def load_data():
 
     # ── Original composite scores (Notebook 05) ──────────────────────
+    # Exact values from Notebook 05 Step 16
     original_scores = pd.DataFrame({
-        'niche'              : ['Kitchen Appliances', 'Bedding',
-                                'Home Appliances', 'Bathroom'],
-        'composite_score'    : [0.5453, 0.4832, 0.4563, 0.3721],
-        'demand_score'       : [0.6847, 0.8102, 0.5234, 0.3102],
-        'competition_score'  : [0.5231, 0.3217, 0.6102, 0.7823],
-        'sentiment_gap_score': [1.0000, 0.4521, 0.7823, 0.5102],
-        'pricing_score'      : [0.4832, 0.6891, 0.3102, 0.5234],
-        'review_count'       : [1547, 2640, 1680, 1398],
+        'niche'              : ['Kitchen Appliances', 'Bathroom',
+                                'Bedding', 'Home Appliances'],
+        'composite_score'    : [0.5453, 0.4560, 0.3607, 0.3168],
+        'demand_score'       : [0.3004, 0.3000, 0.7906, 0.2508],
+        'competition_score'  : [0.6000, 0.7299, 0.0281, 0.5734],
+        'sentiment_gap_score': [1.0000, 0.2540, 0.0000, 0.3634],
+        'pricing_score'      : [0.2757, 0.6000, 0.5825, 0.0366],
+        'review_count'       : [1547, 1398, 2640, 1680],
         'rank'               : [1, 2, 3, 4],
     })
 
-    # ── Held-out validation scores (Notebook 06 — 200k) ──────────────
+    # Exact values from Notebook 06 Step 12
     validation_scores = pd.DataFrame({
         'niche'              : ['Bathroom', 'Kitchen Appliances',
                                 'Home Appliances', 'Bedding'],
-        'composite_score'    : [0.6123, 0.5874, 0.5481, 0.4028],
-        'demand_score'       : [0.2500, 0.3309, 0.4170, 0.8415],
-        'competition_score'  : [0.6982, 0.6000, 0.5825, 0.0613],
+        'composite_score'    : [0.6124, 0.5874, 0.5481, 0.4028],
+        'demand_score'       : [0.2500, 0.3307, 0.4168, 0.8415],
+        'competition_score'  : [0.6985, 0.6000, 0.5826, 0.0615],
         'sentiment_gap_score': [0.9709, 1.0000, 0.9866, 0.0000],
         'pricing_score'      : [0.6000, 0.4408, 0.1536, 0.6749],
         'review_count'       : [12826, 13180, 13524, 23675],
@@ -231,6 +232,7 @@ def load_data():
     })
 
     # ── Sentiment model generalisation ────────────────────────────────
+    # Exact values from Notebooks 04 and 06
     generalisation = pd.DataFrame({
         'Scale'       : ['Original (93k)', 'Held-out 200k'],
         'Accuracy'    : [93.52, 92.84],
