@@ -29,10 +29,10 @@ GREEN  = '#2E7D32'
 LIGHT  = '#F0F4F8'
 
 NICHE_COLOURS = {
-    'Kitchen Appliances' : NAVY,
-    'Bedding'            : ORANGE,
-    'Home Appliances'    : TEAL,
-    'Bathroom'           : PURPLE,
+    'Kitchen Appliances' : '#1B8A3C',  # Strong green
+    'Bedding'            : '#E8833A',  # Orange
+    'Home Appliances'    : '#1565C0',  # Bright blue
+    'Bathroom'           : '#7B1FA2',  # Bright purple
 }
 
 # ── Custom CSS ────────────────────────────────────────────────────────
@@ -479,7 +479,7 @@ with col_radar:
             line=dict(color=NICHE_COLOURS.get(row['niche'], NAVY),
                       width=2.5),
             fillcolor=NICHE_COLOURS.get(row['niche'], NAVY),
-            opacity=0.35,
+            opacity=0.55,
         ))
 
     fig_radar.update_layout(
