@@ -184,7 +184,7 @@ def load_data():
         'competition_score'  : [0.6000, 0.7299, 0.0281, 0.5734],
         'sentiment_gap_score': [1.0000, 0.2540, 0.0000, 0.3634],
         'pricing_score'      : [0.2757, 0.6000, 0.5825, 0.0366],
-        'review_count'       : [1547, 1398, 2640, 1680],
+        'review_count'       : [6503, 6497, 12033, 6723],
         'rank'               : [1, 2, 3, 4],
     })
 
@@ -224,11 +224,11 @@ def load_data():
     models = pd.DataFrame({
         'Model'               : ['Logistic Regression', 'Random Forest',
                                  'XGBoost', 'LSTM'],
-        'Accuracy (%)'        : [93.52, 92.44, 89.66, 92.00],
-        'Weighted F1'         : [0.9379, 0.9185, 0.8786, 0.9232],
-        'ROC-AUC'             : [0.9784, 0.9633, 0.9596, 0.9655],
-        'Negative Recall'     : [0.9252, 0.6160, 0.4040, 0.8759],
-        'Training Time (s)'   : [2.6, 202.3, 295.1, 94.2],
+        'Accuracy (%)'        : [93.52, 92.44, 89.66, 92.31],
+        'Weighted F1'         : [0.9379, 0.9185, 0.8786, 0.9259],
+        'ROC-AUC'             : [0.9784, 0.9633, 0.9596, 0.9627],
+        'Negative Recall'     : [0.9252, 0.6160, 0.4040, 0.8769],
+        'Training Time (s)'   : [1.2, 222.6, 285.7, 88.5],
     })
 
     # ── Sentiment model generalisation ────────────────────────────────
@@ -770,7 +770,7 @@ with col_m2:
         <b style='color:{GREEN};'>✓ Best Model: Logistic Regression</b><br>
         <span style='font-size:0.85rem;color:#333;'>
         Highest accuracy (93.52%), F1 (0.9379), ROC-AUC (0.9784)
-        and negative recall (92.52%) — at fastest training time (2.6s).
+        and negative recall (92.52%) — at fastest training time (1.2s).
         </span>
     </div>
     """, unsafe_allow_html=True)
