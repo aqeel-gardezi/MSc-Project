@@ -1,0 +1,11 @@
+# Pin the app to a single, consistent theme so text/chart contrast is
+# never affected by a viewer's OS/browser dark-mode setting.
+# (Fix for supervisor feedback: "make the text more visible for both
+# light and dark mode" — the app is now always light, by design.)
+[theme]
+base = "light"
+primaryColor = "#E8833A"
+backgroundColor = "#F8FAFC"
+secondaryBackgroundColor = "#FFFFFF"
+textColor = "#1B2A4A"
+font = "sans serif"

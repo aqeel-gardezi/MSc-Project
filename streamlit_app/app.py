@@ -274,44 +274,78 @@ with st.sidebar:
 
     st.markdown("### ⚖️ Adjust Component Weights")
     st.markdown(
-        "<div class='info-box'>Drag sliders to see how weights affect niche rankings in real time.</div>",
+        "<div class='info-box'>Drag the sliders and pick your niches, then press <b>Apply</b> to update the charts below.</div>",
         unsafe_allow_html=True
     )
 
+    # Defaults live in session_state so the charts keep showing the last
+    # *applied* configuration, not whatever the sliders happen to say
+    # mid-drag — this is what the Apply button below controls.
+    if "applied_weights" not in st.session_state:
+        st.session_state.applied_weights = {
+            "demand": 30, "competition": 25, "sentiment": 25, "pricing": 20
+        }
+    if "applied_niches" not in st.session_state:
+        st.session_state.applied_niches = [
+            'Kitchen Appliances', 'Bedding', 'Home Appliances', 'Bathroom'
+        ]
+
     w_demand = st.slider(
-        "📈 Demand", 0, 100, 30, 5,
+        "📈 Demand", 0, 100, st.session_state.applied_weights["demand"], 5,
         help="Review volume, recency, helpful votes and Google Trends"
     )
     w_competition = st.slider(
-        "🏆 Competition", 0, 100, 25, 5,
+        "🏆 Competition", 0, 100, st.session_state.applied_weights["competition"], 5,
         help="Unique products, Gini coefficient and unique sellers"
     )
     w_sentiment = st.slider(
-        "💬 Sentiment Gap", 0, 100, 25, 5,
+        "💬 Sentiment Gap", 0, 100, st.session_state.applied_weights["sentiment"], 5,
         help="Aspect-level negativity vs category average"
     )
     w_pricing = st.slider(
-        "💰 Pricing Stability", 0, 100, 20, 5,
+        "💰 Pricing Stability", 0, 100, st.session_state.applied_weights["pricing"], 5,
         help="Price variance and price sentiment negativity"
     )
 
-    total = w_demand + w_competition + w_sentiment + w_pricing
-    if total != 100:
-        st.warning(f"⚠️ Weights sum to {total}% — adjust to 100%")
-        weights_valid = False
+    raw_total = w_demand + w_competition + w_sentiment + w_pricing
+    if raw_total == 0:
+        st.warning("⚠️ Set at least one weight above 0.")
     else:
-        st.success("✅ Weights sum to 100%")
-        weights_valid = True
+        st.caption(
+            f"Raw total: {raw_total}% — weights are normalised to 100% "
+            f"automatically, so any combination works."
+        )
 
     st.markdown("---")
     st.markdown("### 🔍 Filter Niches")
-    selected_niches = st.multiselect(
+    niche_selection = st.multiselect(
         "Select niches to display",
         options=['Kitchen Appliances', 'Bedding',
                  'Home Appliances', 'Bathroom'],
-        default=['Kitchen Appliances', 'Bedding',
-                 'Home Appliances', 'Bathroom']
+        default=st.session_state.applied_niches
     )
+
+    apply_clicked = st.button("✅ Apply weights & filters", use_container_width=True)
+    if apply_clicked:
+        if raw_total == 0:
+            st.error("Can't apply — at least one weight must be above 0%.")
+        elif not niche_selection:
+            st.error("Can't apply — select at least one niche.")
+        else:
+            st.session_state.applied_weights = {
+                "demand": w_demand, "competition": w_competition,
+                "sentiment": w_sentiment, "pricing": w_pricing,
+            }
+            st.session_state.applied_niches = niche_selection
+            st.toast("Weights and filters applied ✅")
+
+    # Everything below the sidebar uses the *applied* state, not the
+    # live slider positions — so nothing updates until Apply is pressed.
+    aw = st.session_state.applied_weights
+    w_demand, w_competition = aw["demand"], aw["competition"]
+    w_sentiment, w_pricing = aw["sentiment"], aw["pricing"]
+    selected_niches = st.session_state.applied_niches
+    weights_valid = True  # normalisation below means any non-zero combination is valid
 
     st.markdown("---")
     st.markdown("""
@@ -366,12 +400,14 @@ for col, val, label, sub in metrics:
 st.markdown("<div class='section-title'>🎯 Live Composite Scoring</div>",
             unsafe_allow_html=True)
 
-# Recompute scores based on current weights
-if weights_valid and selected_niches:
-    wD = w_demand / 100
-    wC = w_competition / 100
-    wS = w_sentiment / 100
-    wP = w_pricing / 100
+# Recompute scores based on the last *applied* weights (normalised so
+# they always sum to 100%, whatever raw values were on the sliders)
+_applied_total = w_demand + w_competition + w_sentiment + w_pricing
+if weights_valid and selected_niches and _applied_total > 0:
+    wD = w_demand / _applied_total
+    wC = w_competition / _applied_total
+    wS = w_sentiment / _applied_total
+    wP = w_pricing / _applied_total
 
     live_scores = original_scores[
         original_scores['niche'].isin(selected_niches)
@@ -421,7 +457,7 @@ if weights_valid and selected_niches:
     col_chart, col_rank = st.columns([2, 1])
 
     with col_chart:
-        st.plotly_chart(fig_live, use_container_width=True)
+        st.plotly_chart(fig_live, use_container_width=True, theme=None)
 
     with col_rank:
         st.markdown("**Live Rankings**")
@@ -502,7 +538,7 @@ with col_radar:
         height=380,
         margin=dict(t=50, b=60, l=40, r=40),
     )
-    st.plotly_chart(fig_radar, use_container_width=True)
+    st.plotly_chart(fig_radar, use_container_width=True, theme=None)
 
 with col_table:
     st.markdown("**Original Corpus — Component Scores**")
@@ -528,11 +564,11 @@ with col_table:
         height=200
     )
 
-    st.markdown("**Weight Applied (Current)**")
+    st.markdown("**Weight Applied (Current, normalised to 100%)**")
     weight_data = {
         'Component' : ['Demand', 'Competition', 'Sentiment Gap', 'Pricing'],
-        'Weight'    : [f"{w_demand}%", f"{w_competition}%",
-                       f"{w_sentiment}%", f"{w_pricing}%"],
+        'Weight'    : [f"{wD*100:.0f}%", f"{wC*100:.0f}%",
+                       f"{wS*100:.0f}%", f"{wP*100:.0f}%"],
         'Signal Count': ['4 signals', '3 signals', '11 aspects', '2 signals'],
     }
     st.dataframe(pd.DataFrame(weight_data), use_container_width=True,
@@ -586,7 +622,7 @@ if selected_niche_asp:
         height=380,
         margin=dict(t=50, b=40, l=120, r=80),
     )
-    st.plotly_chart(fig_asp, use_container_width=True)
+    st.plotly_chart(fig_asp, use_container_width=True, theme=None)
 
     # Top unmet needs
     top_gaps = asp_data[asp_data['Gap'] > 0].head(3)
@@ -650,7 +686,7 @@ with col_v1:
         margin=dict(t=50, b=60, l=40, r=40),
     )
     fig_val.add_hline(y=0.50, line_dash='dash', line_color='#CCCCCC')
-    st.plotly_chart(fig_val, use_container_width=True)
+    st.plotly_chart(fig_val, use_container_width=True, theme=None)
 
 with col_v2:
     # Sentiment model generalisation
@@ -684,7 +720,7 @@ with col_v2:
         height=360,
         margin=dict(t=50, b=60, l=40, r=40),
     )
-    st.plotly_chart(fig_gen, use_container_width=True)
+    st.plotly_chart(fig_gen, use_container_width=True, theme=None)
 
 # Validation verdict cards
 st.markdown("**Validation Verdict**")
@@ -748,7 +784,7 @@ with col_m1:
         height=320,
         margin=dict(t=50, b=40, l=40, r=40),
     )
-    st.plotly_chart(fig_models, use_container_width=True)
+    st.plotly_chart(fig_models, use_container_width=True, theme=None)
 
 with col_m2:
     st.markdown("**Model Performance Summary**")
@@ -809,7 +845,7 @@ with col_ng1:
         height=300,
         margin=dict(t=50, b=40, l=40, r=40),
     )
-    st.plotly_chart(fig_ng, use_container_width=True)
+    st.plotly_chart(fig_ng, use_container_width=True, theme=None)
 
 with col_ng2:
     st.markdown("**N-gram Comparison Results**")
