@@ -308,13 +308,18 @@ with st.sidebar:
     )
 
     raw_total = w_demand + w_competition + w_sentiment + w_pricing
-    if raw_total == 0:
-        st.warning("⚠️ Set at least one weight above 0.")
-    else:
-        st.caption(
-            f"Raw total: {raw_total}% — weights are normalised to 100% "
-            f"automatically, so any combination works."
+    if raw_total > 100:
+        st.error(
+            f"❌ Total weight is {raw_total}%. The combined weight cannot exceed 100%. "
+            "Please reduce the weights before applying."
         )
+    elif raw_total < 100:
+        st.warning(
+            f"⚠️ Total weight is {raw_total}%. The combined weight must equal 100%. "
+            "Please adjust the weights before applying."
+        )
+    else:
+        st.success("✅ Total weight: 100% — ready to apply.")
 
     st.markdown("---")
     st.markdown("### 🔍 Filter Niches")
@@ -327,8 +332,16 @@ with st.sidebar:
 
     apply_clicked = st.button("✅ Apply weights & filters", use_container_width=True)
     if apply_clicked:
-        if raw_total == 0:
-            st.error("Can't apply — at least one weight must be above 0%.")
+        if raw_total > 100:
+            st.error(
+                f"Can't apply — total weight is {raw_total}%. "
+                "The combined weight cannot exceed 100%."
+            )
+        elif raw_total < 100:
+            st.error(
+                f"Can't apply — total weight is {raw_total}%. "
+                "The combined weight must equal 100%."
+            )
         elif not niche_selection:
             st.error("Can't apply — select at least one niche.")
         else:
@@ -345,7 +358,7 @@ with st.sidebar:
     w_demand, w_competition = aw["demand"], aw["competition"]
     w_sentiment, w_pricing = aw["sentiment"], aw["pricing"]
     selected_niches = st.session_state.applied_niches
-    weights_valid = True  # normalisation below means any non-zero combination is valid
+    weights_valid = (w_demand + w_competition + w_sentiment + w_pricing == 100)
 
     st.markdown("---")
     st.markdown("""
@@ -400,14 +413,13 @@ for col, val, label, sub in metrics:
 st.markdown("<div class='section-title'>🎯 Live Composite Scoring</div>",
             unsafe_allow_html=True)
 
-# Recompute scores based on the last *applied* weights (normalised so
-# they always sum to 100%, whatever raw values were on the sliders)
+# Recompute scores only when the last applied weights total exactly 100%.
 _applied_total = w_demand + w_competition + w_sentiment + w_pricing
-if weights_valid and selected_niches and _applied_total > 0:
-    wD = w_demand / _applied_total
-    wC = w_competition / _applied_total
-    wS = w_sentiment / _applied_total
-    wP = w_pricing / _applied_total
+if weights_valid and selected_niches:
+    wD = w_demand / 100
+    wC = w_competition / 100
+    wS = w_sentiment / 100
+    wP = w_pricing / 100
 
     live_scores = original_scores[
         original_scores['niche'].isin(selected_niches)
@@ -564,7 +576,7 @@ with col_table:
         height=200
     )
 
-    st.markdown("**Weight Applied (Current, normalised to 100%)**")
+    st.markdown("**Weight Applied (Current — total 100%)**")
     weight_data = {
         'Component' : ['Demand', 'Competition', 'Sentiment Gap', 'Pricing'],
         'Weight'    : [f"{wD*100:.0f}%", f"{wC*100:.0f}%",
