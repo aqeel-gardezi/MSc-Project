@@ -188,41 +188,35 @@ def load_data():
         'rank'               : [1, 2, 3, 4],
     })
 
-    # Exact values from Notebook 06 Step 12
+    # Exact values from Notebook 06 Step 12 (corrected)
     validation_scores = pd.DataFrame({
-        'niche'              : ['Bathroom', 'Kitchen Appliances',
+        'niche'              : ['Kitchen Appliances', 'Bathroom',
                                 'Home Appliances', 'Bedding'],
-        'composite_score'    : [0.6124, 0.5874, 0.5481, 0.4028],
-        'demand_score'       : [0.2500, 0.3307, 0.4168, 0.8415],
-        'competition_score'  : [0.6985, 0.6000, 0.5826, 0.0615],
-        'sentiment_gap_score': [0.9709, 1.0000, 0.9866, 0.0000],
-        'pricing_score'      : [0.6000, 0.4408, 0.1536, 0.6749],
-        'review_count'       : [12826, 13180, 13524, 23675],
+        'composite_score'    : [0.5747, 0.4654, 0.4561, 0.4028],
+        'demand_score'       : [0.3307, 0.2500, 0.4168, 0.8415],
+        'competition_score'  : [0.6000, 0.6985, 0.5826, 0.0615],
+        'sentiment_gap_score': [1.0000, 0.3830, 0.6951, 0.0000],
+        'pricing_score'      : [0.3775, 0.6000, 0.0581, 0.6749],
         'rank'               : [1, 2, 3, 4],
     })
 
-    # ── Aspect sentiment gaps (Notebook 06) ──────────────────────────
+    # ── Aspect sentiment gaps (Notebook 06 Step 10, corrected, held-out 200k) ──
     aspects = pd.DataFrame({
-        'aspect'         : ['comfort', 'noise', 'delivery', 'price',
-                            'quality', 'ease_of_use', 'appearance',
-                            'performance', 'smell', 'customer_service',
-                            'size'],
-        'Kitchen Appliances': [0.1117, 0.0687, 0.0600, 0.0125,
-                               0.0260, -0.0229, 0.0266,
-                               -0.0007, 0.0022, 0.0118,
-                               -0.0214],
-        'Bedding'           : [-0.0213, -0.0311, -0.0492, -0.0437,
-                               -0.0307, -0.0076, -0.0179,
-                               -0.0366, 0.0243, -0.0777,
-                               0.0061],
-        'Home Appliances'   : [0.0896, -0.0094, 0.0277, 0.0188,
-                               0.0370, 0.0204, 0.0378,
-                               0.0157, -0.0429, 0.0674,
-                               0.0048],
-        'Bathroom'          : [0.0251, 0.0207, 0.0195, 0.0578,
-                               0.0123, 0.0207, -0.0058,
-                               -0.0059, 0.0208, 0.0836,
-                               0.0095],
+        'aspect'         : ['smell', 'noise', 'durability', 'quality',
+                            'price', 'performance', 'size', 'cleaning',
+                            'comfort', 'appearance', 'ease_of_use'],
+        'Kitchen Appliances': [0.2218, 0.1365, 0.0317, 0.0421,
+                               0.0098, 0.0237, -0.0054, -0.0256,
+                               0.0826, 0.0388, -0.0153],
+        'Bedding'           : [0.0971, -0.1009, -0.0388, -0.0102,
+                               -0.0449, -0.0020, -0.0230, 0.0628,
+                               -0.0628, 0.0026, -0.0129],
+        'Home Appliances'   : [0.0500, -0.0396, 0.0645, 0.0829,
+                               0.0207, 0.0326, 0.0088, 0.0056,
+                               0.0350, 0.0588, 0.0156],
+        'Bathroom'          : [0.0659, -0.0535, -0.0135, 0.0233,
+                               0.0319, 0.0197, 0.0004, 0.0448,
+                               0.0090, -0.0107, 0.0077],
     })
 
     # ── Model comparison (Notebook 04) ───────────────────────────────
@@ -742,8 +736,8 @@ verdicts = [
      'Accuracy drop < 0.7pp · ROC-AUC 0.9772 vs 0.9784'),
     ('Niche Discovery', 'VALIDATED', GREEN,
      '4/4 niches replicated · Share deviation < 2%'),
-    ('Composite Ranking', 'PARTIAL', '#F57F17',
-     'Top-2 consistent · Home Appliances stable #3'),
+    ('Composite Ranking', 'VALIDATED', GREEN,
+     'Kitchen #1 & Bathroom #2 unchanged · Home Appliances moved to #3'),
 ]
 for col, (comp, verdict, colour, evidence) in zip(v_cols, verdicts):
     with col:
